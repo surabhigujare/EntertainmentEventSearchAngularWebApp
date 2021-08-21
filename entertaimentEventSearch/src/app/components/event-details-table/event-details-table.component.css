@@ -1,0 +1,67 @@
+.progress-wrapper{
+  position: relative;
+  width: 40px;
+  height: 40px;
+}
+.progress-popularity{
+  top: 20%;
+  left: 30%;
+  position: absolute;
+  z-index: 9;
+  font-size: 15px;
+}
+round-progress{
+  position: absolute;
+  top: 0;
+  left: 0;
+  /* margin: auto; */
+}
+
+h1, h5, h6 {
+  text-align: center;
+  margin-top: 1%;
+}
+
+.twitter-btn {
+  background-image: url('https://csci571.com/hw/hw8/images/Twitter.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  width: 45px;
+  height: 40px;
+  border-color: #489cf4;
+  background-color: #489cf4;
+}
+
+.btn-bar {
+  margin-top: 2%;
+  margin-bottom: 6%;
+}
+
+.details-nav-bar {
+  margin-top: 2%;
+}
+
+.favourite {
+  color: gold;
+}
+
+.alert {
+  margin-top: 4%;
+}
+
+table {
+  margin-top: 2%;
+}
+
+.btn-light {
+  border-color: black ;
+}
+
+.btn-light :hover {
+  border-color: black;
+  border-width: 0px;
+}
+
+a {
+  cursor: pointer;
+}

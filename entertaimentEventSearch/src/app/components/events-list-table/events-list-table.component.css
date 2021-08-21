@@ -1,0 +1,25 @@
+.top-btns-bar {
+  margin-top: 5%;
+  margin-bottom: 5%;
+  align-content: center;
+}
+
+.favourite {
+  color: gold;
+}
+
+.alert {
+  margin-top: 4%;
+}
+
+table {
+  margin-top: 2%;
+}
+
+.btn-light {
+  border-color: black ;
+}
+
+a {
+  cursor: pointer;
+}

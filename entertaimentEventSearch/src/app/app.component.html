@@ -1,0 +1,90 @@
+<div class = "container">
+  <div class = "row">
+      <div class="col-1 col-sm-1"> </div>
+      <div class="card container col-10 col-sm-10">
+        <div class = "row">
+          <div class="col-1 col-sm-1"> </div>
+          <div class = "col-10 col-sm-9">
+            <h2 style = "margin-top: 1%; margin-bottom: 2%;"> Entertainment Event Ticket Search</h2>
+            <form #userForm = "ngForm" (ngSubmit)="userForm.form.valid && onSearchButtonClicked()">
+            <!--Keyword-->
+              <div class = 'form-group required row'>
+
+                <div class = "col-sm-3">
+                  <label for="keyword" class="control-label col-sm-form-label">Keyword</label>
+                </div>
+                <div class = "col-sm-9">
+                  <input #keywordInput="ngModel" [ngClass]="{ 'is-invalid': userForm.submitted && keywordInput.invalid }" type="text" class="form-control" placeholder="Enter Artist, Team or Event Name(e.g. Lakers)" name = "keyword" [(ngModel)] = "keyword" (input) = "getAutocompleteSuggestions(keyword)" matInput [matAutocomplete]="auto" required>
+                  <div class="invalid-feedback" *ngIf="userForm.submitted && keywordInput.invalid">
+                    <p *ngIf="keywordInput.errors?.required">Please enter a keyword.</p>
+                  </div>
+                  <mat-autocomplete #auto = "matAutocomplete">
+                    <mat-option *ngFor = "let option of autocompleteList" [value] = "option">
+                        {{option}}
+                    </mat-option>
+                  </mat-autocomplete>
+                </div>
+
+              </div>
+            <!--Category-->
+              <div class = 'form-group row'>
+                <div class = "col-sm-3">
+                  <label for="category" class="col-form-label">Category</label>
+                </div>
+                <div class="col-sm-9">
+                  <select class="form-control" name = "categoryOption" [(ngModel)] = "categoryOption">
+                  <option selected value="all">All</option>
+                  <option *ngFor = "let category of categoryOptions" value = {{category}}>{{category}}</option>
+                  </select>
+                </div>
+              </div>
+            <!--Distance-->
+              <div class = 'form-group row'>
+                <div class="col-2 col-sm-3">
+                  <label for="distance" class="col-form-label">Distance</label>
+                </div>
+                <div class="col-sm-4">
+                    <input type="number" min = 0 class="form-control" placeholder="10" name = "distance" [(ngModel)] = "distance">
+                </div>
+                <div class="col-sm-4">
+                    <select class="form-control" name = "unit" [(ngModel)] = "unit">
+                    <option selected value="miles">Miles</option>
+                    <option value="km">Kilometers</option>
+                    </select>
+                </div>
+              </div>
+            <!--From-->
+              <fieldset class="form-group required">
+                <div class="row">
+                  <legend class=" col-sm-3 control-label col-form-label pt-0">From</legend>
+                  <div class="col-sm-9">
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="locationType" value="currentLocation" [(ngModel)] = "radioType" checked (click) = "radioButtonClicked(true)">
+                      <label class="form-check-label" for="gridRadios1">Current location</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="locationType" value="userLocation" [(ngModel)] = "radioType" (click) = "radioButtonClicked(false)">
+                      <label class="form-check-label" for="gridRadios2">Other. Please Specify:</label>
+                      <input #locationInput="ngModel" [ngClass]="{ 'is-invalid': userForm.submitted && locationInput.invalid }" type="text" class="form-control" placeholder="" id="locationText" name = "location" [disabled] = "isLocationsDisabled" [(ngModel)] = "location" required>
+                      <div class="invalid-feedback" *ngIf="userForm.submitted && locationInput.invalid">
+                        <p *ngIf="locationInput.errors?.required">Please enter a location.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+            <!--Buttons-->
+              <div class = 'form-group row'>
+                <div class="col-sm-10">
+                  <button type="submit" [disabled]='!userForm.valid' class="btn btn-primary"><span class="material-icons" style="vertical-align: middle;">search</span>Search</button>
+                  <button type="button" class="btn btn-light btn-outline-secondary" (click) = "clearButtonClicked()"><span class="material-icons" style="vertical-align: middle;">clear_all</span>Clear</button>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="col-3 col-sm-2"> </div>
+        </div>
+      </div>
+      <div class="col-1 col-sm-1"> </div>
+  </div>
+</div>

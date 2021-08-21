@@ -1,0 +1,200 @@
+<div class = "container">
+  <div class = "row">
+      <div class="col-1 col-sm-1"> </div>
+      <div class="container col-10 col-sm-10" *ngIf = "displayComponent == true" [@flyInOut]>
+            <div>
+              <h1>{{eventDetailsObj.eventname}}</h1>
+            </div>
+            <div class = "btn-bar row">
+              <div class="float-left col-8 col-sm-9">
+                <button type="button" class="btn btn-light" style="vertical-align: middle;" (click) = 'listButtonClicked()'><span class="material-icons" style="vertical-align: middle;">chevron_left</span>List</button>
+              </div>
+              <div class="col-4 col-sm-3">
+                <button class="btn btn-light float-right"><span class="material-icons" style="vertical-align: middle;" (click) = "favouriteButtonClicked()"><div class = "favourite" *ngIf="eventDetailsObj.isFavourite">star</div><div *ngIf="!eventDetailsObj.isFavourite">star_border</div></span></button>
+                <a class="float-right twitter-share-button" href="https://twitter.com/intent/tweet?text=Check+out+{{eventDetailsObj.eventname}}+located+at+{{eventDetailsObj.eventVenue}}.&hashtags=CSCI571EventSearch" target='_blank'><img class="twitter-btn"> </a>
+              </div>
+            </div>
+            <div class= "details-nav-bar">
+              <ul class="nav nav-tabs justify-content-end">
+                <li class="nav-item" [class.active]="viewMode == 'tab1'" rel="tab1" (click)="viewMode ='tab1'">
+                  <a class="nav-link" [class.active]="viewMode == 'tab1'" href="#eventDetailsTable">Event</a>
+                </li>
+                <li class="nav-item" [class.active]="viewMode == 'tab2'" rel="tab2" (click)="viewMode ='tab2'">
+                  <a class="nav-link" [class.active]="viewMode == 'tab2'" href="#artistsDetailsTab">Artist/Teams</a>
+                </li>
+                <li class="nav-item" [class.active]="viewMode == 'tab3'" rel="tab3" (click)="viewMode ='tab3'">
+                  <a class="nav-link" [class.active]="viewMode == 'tab3'" href="#venueDetailsTab">Venue</a>
+                </li>
+              </ul>
+            </div>
+
+            <div [ngSwitch]="viewMode">
+
+              <!--Event Details Tab-->
+              <div class = 'eventDetailsContainer' *ngSwitchCase="'tab1'">
+                <div class = "table-responsive" *ngIf = "eventDetailsObj.isInfoAvailable == true && eventdetailsErrorType == 'no error'">
+                  <table class="table table-striped">
+                      <tbody>
+                      <tr *ngIf = "eventDetailsObj.artistName != '' ">
+                        <th scope="row">Artist/Teams(s)</th>
+                        <td>{{eventDetailsObj.artistName}}</td>
+                      </tr>
+                      <tr *ngIf = "eventDetailsObj.eventVenue != '' ">
+                        <th scope="row">Venue</th>
+                        <td>{{eventDetailsObj.eventVenue}}</td>
+                      </tr>
+                      <tr *ngIf = "eventDetailsObj.eventTime != '' ">
+                        <th scope="row">Time</th>
+                        <td>{{eventDetailsObj.eventTime | date: 'MMM d, y'}}</td>
+                      </tr>
+                      <tr *ngIf = "eventDetailsObj.eventcategory != '' ">
+                        <th scope="row">Category</th>
+                        <td>{{eventDetailsObj.eventcategory}}</td>
+                      </tr>
+                      <tr *ngIf = "eventDetailsObj.eventPriceRange != '' ">
+                        <th scope="row">Price Range</th>
+                        <td>{{eventDetailsObj.eventPriceRange}}</td>
+                      </tr>
+                      <tr *ngIf = "eventDetailsObj.eventTicketstatus != '' ">
+                        <th scope="row">Ticket Status</th>
+                        <td>{{eventDetailsObj.eventTicketstatus}}</td>
+                      </tr>
+                      <tr *ngIf = "eventDetailsObj.buyAt != '' ">
+                        <th scope="row">Buy Ticket At</th>
+                        <td><a href = '{{eventDetailsObj.buyAtUrl}}' target = "_blank">{{eventDetailsObj.buyAt}} </a></td>
+                      </tr>
+                      <tr *ngIf = "eventDetailsObj.eventSeatMap != '' ">
+                        <th scope="row">Seat Map</th>
+                        <td><a href="#" data-toggle="modal" data-target="#exampleModal">View Seat Map Here</a></td> <!---->
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModal">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">View Seat Map</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <img src={{eventDetailsObj.eventSeatMap}} class="container">
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </tr>
+                      </tbody>
+                  </table>
+                </div>
+                <div *ngIf = "eventDetailsObj.isInfoAvailable == false && eventdetailsErrorType == 'warning'">
+                  <div class="alert alert-warning" role="alert"> No Records</div>
+                </div>
+                <div *ngIf = "eventdetailsErrorType == 'danger'">
+                  <div class="alert alert-danger" role="alert"> Failed to get event details!</div>
+                </div>
+              </div>
+
+              <!--Artist Details Tab-->
+
+              <div class = 'artistDetailsContainer' *ngSwitchCase="'tab2'">
+                <div *ngIf = "eventDetailsObj.isInfoAvailable == true && artistDetailsObjArray.length != 0 && artistdetailsErrorType == 'no error'">
+                  <div *ngFor="let artistDetailsObj of artistDetailsObjArray">
+                    <div>
+                      <h5> {{artistDetailsObj.title}}</h5>
+                    </div>
+                    <div *ngIf = "artistDetailsObj.isInfoAvailable != true ">
+                      <h6> {{artistDetailsObj.subtitle}}</h6>
+                    </div>
+                    <div class = "table-responsive">
+                      <table class="table" *ngIf = "artistDetailsObj.isInfoAvailable == true ">
+                        <tbody>
+                          <tr *ngIf = "artistDetailsObj.artistName != 'N/A' ">
+                            <th style = "width: 45%" scope="row">Name</th>
+                            <td>{{artistDetailsObj.artistName}}</td>
+                          </tr>
+                          <tr *ngIf = "artistDetailsObj.followers != 'N/A' ">
+                            <th style = "width: 45%" scope="row">Followers</th>
+                            <td>{{artistDetailsObj.followers | number:'1.0':'en-US'}}</td>
+                          </tr>
+                          <tr *ngIf = "artistDetailsObj.popularity != 0 ">
+                            <th style = "width: 45%" scope="row">Popularity</th>
+                            <td>
+                              <div class="progress-wrapper">
+                                  <div class="progress-popularity" >
+                                    {{ artistDetailsObj.popularity}}
+                                  </div>
+                                  <round-progress [current]="artistDetailsObj.popularity" [max]="100" [color]="'#a8ee90'" [radius]="20" [stroke]="3" [clockwise] = "false"> </round-progress>
+                              </div>
+                            </td>
+                          </tr>
+                          <tr *ngIf = "artistDetailsObj.checkAt != 'N/A' ">
+                            <th style = "width: 45%" scope="row">Check At</th>
+                            <td><a href='{{artistDetailsObj.checkAt}}' target = "_blank">Spotify</a></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                <div *ngIf = "(eventDetailsObj.isInfoAvailable == false || artistDetailsObjArray.length == 0) && artistdetailsErrorType == 'warning'">
+                  <div class="alert alert-warning" role="alert"> No Records</div>
+                </div>
+                <div *ngIf = "artistdetailsErrorType == 'danger'">
+                  <div class="alert alert-danger" role="alert"> Failed to get artist details!</div>
+                </div>
+              </div>
+
+              <!--Venue Details Tab-->
+
+              <div class = 'venueDetailsContainer' *ngSwitchCase="'tab3'">
+                <div  class = "table-responsive" *ngIf = "venueDetailsObj.isInfoAvailable == true && venueErrorType == 'no error'">
+                  <table class="table">
+                    <tbody>
+                      <tr *ngIf = "venueDetailsObj.address != 'N/A' ">
+                        <th style = "width: 20%" scope="row">Address</th>
+                        <td> {{venueDetailsObj.address}}</td>
+                      </tr>
+                      <tr *ngIf = "venueDetailsObj.city != 'N/A' ">
+                        <th style = "width: 20%" scope="row">City</th>
+                        <td>{{venueDetailsObj.city}}</td>
+                      </tr>
+                      <tr *ngIf = "venueDetailsObj.phoneNo != 'N/A' ">
+                        <th style = "width: 20%" scope="row">Phone Number</th>
+                        <td>{{venueDetailsObj.phoneNo}}</td>
+                      </tr>
+                      <tr *ngIf = "venueDetailsObj.openHours != 'N/A' ">
+                        <th style = "width: 20%" scope="row">Open Hours</th>
+                        <td>{{venueDetailsObj.openHours}}</td>
+                      </tr>
+                      <tr *ngIf = "venueDetailsObj.generalRule != 'N/A' ">
+                        <th style = "width: 20%" scope="row">General Rule</th>
+                        <td>{{venueDetailsObj.generalRule}}</td>
+                      </tr>
+                      <tr *ngIf = "venueDetailsObj.childRule != 'N/A' ">
+                        <th style = "width: 20%" scope="row">Child Rule</th>
+                        <td>{{venueDetailsObj.childRule}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div *ngIf = "venueDetailsObj.latitude != 0 || venueDetailsObj.longitude != 0">
+                    <agm-map [latitude]="venueDetailsObj.latitude" [longitude]="venueDetailsObj.longitude" style = 'height: 400px'>
+                      <agm-marker [latitude]="venueDetailsObj.latitude" [longitude]="venueDetailsObj.longitude"></agm-marker>
+                    </agm-map>
+                  </div>
+                </div>
+                <div *ngIf = "venueDetailsObj.isInfoAvailable == false && venueErrorType == 'warning'">
+                  <div class="alert alert-warning" role="alert"> No Records</div>
+                </div>
+                <div *ngIf = "venueErrorType == 'danger'">
+                  <div class="alert alert-danger" role="alert"> Failed to get venue details!</div>
+                </div>
+              </div>
+
+            </div>
+      </div>
+      <div class="col-1 col-sm-1"> </div>
+  </div>
+</div>

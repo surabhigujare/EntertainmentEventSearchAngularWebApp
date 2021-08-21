@@ -1,0 +1,93 @@
+
+<div class = "container">
+  <div class = "row">
+      <div class="col-1 col-sm-1"> </div>
+      <div  class="container col-10 col-sm-10">
+        <div class="btns text-center top-btns-bar">
+          <button class="btn" [class.active]="displayList == 'results'" rel="results" [ngClass]="{'btn-primary' : displayList == 'results', 'btn-light': displayList == 'favourites'}" (click)="resultsTabClicked()">Results</button>
+          <button class="btn" style = " margin-left: 0.3%;" [class.active]="displayList == 'favourites'" rel="favourites" [ngClass]="{'btn-primary' : displayList == 'favourites', 'btn-light': displayList == 'results'}" (click)="favouriteTabClicked()">Favorites</button>
+        </div>
+
+        <div class="col-12 mt-5" *ngIf="isProgressVisible === true">
+          <div class="progress">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" [style.width]="dataAvailable+'%'"></div>
+          </div>
+        </div>
+
+        <div>
+          <div *ngIf = "displayComponent == true && (eventListDataSource.length !=0 || favouriteEventsList.length !=0)">
+            <button type="button" class="btn btn-light float-right" style="vertical-align: middle; cursor: pointer;" (click) = 'detailsButtonClicked()' [disabled]="isDetailsBtnDisabled">Details<span class="material-icons" style="vertical-align: middle;">chevron_right</span></button>
+          </div>
+          <div [ngSwitch]="displayList">
+
+            <div *ngSwitchCase="'results'">
+              <div class = "table-responsive" *ngIf = "eventListDataSource.length != 0 && errorType == 'no error'">
+                <table class="table table-hover" *ngIf = "displayComponent == true">
+                  <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Event</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Venue Info</th>
+                        <th scope="col">Favorite</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let e of eventListDataSource; let i = index">
+                        <th scope="row">{{ i+1 }}</th>
+                        <td>{{ e.eventdate }}</td>
+                        <td><a (click)="clickedOnEvent(e)" matTooltip={{e.tooltip}}> {{ e.eventname }} </a></td>
+                        <td>{{ e.eventcategory}}</td>
+                        <td>{{ e.eventVenue}}</td>
+                        <td><span class="material-icons" style="vertical-align: middle;" (click) = "favouriteButtonClicked(e)">
+                          <div class = "favourite" *ngIf="e.isFavourite">star</div><div *ngIf="!e.isFavourite">star_border</div>
+                        </span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div *ngIf = "eventListDataSource.length == 0 && errorType == 'warning'">
+                <div class="alert alert-warning" role="alert" *ngIf = "displayComponent == true"> No Records</div>
+              </div>
+              <div *ngIf = "eventListDataSource.length == 0 && errorType == 'danger'">
+                <div class="alert alert-danger" role="alert" *ngIf = "displayComponent == true"> Failed to get search results</div>
+              </div>
+            </div>
+
+            <div *ngSwitchCase="'favourites'" >
+              <div class = "table-responsive" *ngIf = "favouriteEventsList.length != 0">
+                <table class="table table-hover" *ngIf = "displayComponent == true || shouldFavouriteListDisplay == true">
+                    <thead>
+                      <tr>
+                          <th scope="col">#</th>
+                          <th scope="col">Date</th>
+                          <th scope="col">Event</th>
+                          <th scope="col">Category</th>
+                          <th scope="col">Venue Info</th>
+                          <th scope="col">Favorite</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let obj of favouriteEventsList; let j = index">
+                          <th scope="row">{{ j+1 }}</th>
+                          <td>{{ obj.eventdate }}</td>
+                          <td><a (click)="clickedOnEvent(obj)" matTooltip={{obj.tooltip}}> {{ obj.eventname }} </a></td>
+                          <td>{{ obj.eventcategory}}</td>
+                          <td>{{ obj.eventVenue}}</td>
+                          <td><span class="material-icons" style="vertical-align: middle; cursor: pointer;" (click) = "deleteButtonClicked(obj)">delete</span></td>
+                      </tr>
+                    </tbody>
+                </table>
+              </div>
+              <div *ngIf = "favouriteEventsList.length == 0">
+                <div class="alert alert-warning" role="alert" *ngIf = "displayComponent == true || shouldFavouriteListDisplay == true"> No Records</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <div class="col-1 col-sm-1"> </div>
+  </div>
+</div>
